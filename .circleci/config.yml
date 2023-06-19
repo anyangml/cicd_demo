@@ -1,0 +1,42 @@
+version: 2.1
+
+references:
+  python_img: &python_img circleci/python:3.9.7
+
+  checkout: &checkout
+    checkout:
+      path: ~/cicd_demo
+
+  install_deps: &install_deps
+    run:
+      name: Install dependencies
+      command: make init
+
+  format: &format
+    run:
+      name: Formatting code
+      command: make format
+
+  run_tests: &run_tests
+    run:
+      name: Unit tests
+      command: make test
+
+jobs:
+  cicd_demo_v1:
+    docker:
+      - image: *python_img
+
+    working_directory: ~/cicd_demo
+
+    steps:
+      - *checkout
+      - *install_deps
+      - *format
+      - *run_tests
+
+workflows:
+  version: 2
+  workflow_v1:
+    jobs:
+      - cicd_demo_v1
